@@ -1,6 +1,7 @@
 package com.abdou.orderservice.service;
 
 
+import com.abdou.orderservice.dto.InventoryResponse;
 import com.abdou.orderservice.dto.OrderLineItemsDto;
 import com.abdou.orderservice.dto.OrderRequest;
 import com.abdou.orderservice.model.Order;
@@ -9,7 +10,10 @@ import com.abdou.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.Arrays;
+import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -19,6 +23,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class OrderService {
     private final OrderRepository orderRepository;
+    private final WebClient webClient;
     public void placeOrder(OrderRequest orderRequest) {
         Order order = new Order();
         order.setOrderNumber(UUID.randomUUID().toString());
@@ -30,7 +35,22 @@ public class OrderService {
                 .collect(Collectors.toList());
 
         order.setOrderLineItems(orderLineItems);
-        orderRepository.save(order);
+
+        List<String> skuCodes = order.getOrderLineItems().stream()
+                .map(OrderLineItems::getSkuCode)
+                .collect(Collectors.toList());
+
+        InventoryResponse[] inventoryResponsArray =webClient.get()
+                .uri("http://localhost:9099/api/inventory",uriBuilder -> uriBuilder.queryParam("skuCode",skuCodes).build())
+                .retrieve()
+                .bodyToMono(InventoryResponse[].class)
+                .block();
+        boolean allProductsInStock = Arrays.stream(inventoryResponsArray).allMatch(InventoryResponse::isInStock);
+        if(allProductsInStock) {
+            orderRepository.save(order);
+        }else {
+            throw new IllegalArgumentException("Product is not in stock, please try again later.");
+        }
     }
 
     private OrderLineItems mapToDto(OrderLineItemsDto orderLineItemsDto){
