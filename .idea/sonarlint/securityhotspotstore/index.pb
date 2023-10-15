@@ -1,7 +1,19 @@
 
+I
+inventory-service/pom.xml,e\3\e347da292c40d252c508703eddff460d1f378f1c
+G
+product-service/pom.xml,f\c\fcf146007330bb14605a232d25428bbf6aa50b7b
+7
+pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec
 E
 order-service/pom.xml,d\3\d3bf53ecc442740843266a635cbfe9807b992566
+|
+Lorder-service/src/main/java/com/abdou/orderservice/service/OrderService.java,5\7\577801ce65141d449e1c62a2e2237ba8772eb0e3
 
 Oorder-service/src/main/java/com/abdou/orderservice/OrderServiceApplication.java,2\7\273f87190efc90c597d1a5fde35d060fd606ef28
+‚
+Rproduct-service/src/main/java/com/abdou/productservice/service/ProductService.java,a\0\a08dfbbff35377d637ab5326c90b0c5467660e46
 …
 Uproduct-service/src/main/java/com/abdou/productservice/ProductServiceApplication.java,9\9\999530f5f363ab76744314c683dbbe88ad50f99a
+‹
+[inventory-service/src/main/java/com/abdou/inventoryservice/InventoryServiceApplication.java,9\6\969478a09d23166895d9bf779a8d396b59bc4baa
